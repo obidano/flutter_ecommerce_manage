@@ -10,28 +10,42 @@ class MButton extends StatelessWidget {
       this.onClick,
       this.elevation,
       this.backgroundColor,
-      this.icon});
+      this.icon,
+      this.mainAxisSize = MainAxisSize.min,
+      this.textColor = Colors.deepOrange});
 
+  final MainAxisSize mainAxisSize;
   final String text;
   final bool isLoading;
   final VoidCallback? onClick;
   final double? elevation;
   final Color? backgroundColor;
+  final Color textColor;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Sizes.p32,
+      height: Sizes.p64,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor ?? Colors.white,
-            elevation: elevation ?? 1.0),
+          backgroundColor: backgroundColor ?? Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                10.0), // Ajustez la valeur du rayon selon vos besoins
+          ),
+        ).merge(ButtonStyle(elevation:
+            MaterialStateProperty.resolveWith<double>(
+                (Set<MaterialState> states) {
+          if (states.contains(MaterialState.pressed)) return 0.0;
+          return elevation ?? 1.0;
+        }))),
         onPressed: onClick,
         child: isLoading
             ? const CircularProgressIndicator()
             : Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: mainAxisSize,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
                     const Icon(Icons.refresh),
@@ -43,7 +57,7 @@ class MButton extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(color: Colors.deepOrange),
+                        .copyWith(color: textColor),
                   ),
                 ],
               ),

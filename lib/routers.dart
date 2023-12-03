@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginPage.dart';
 
 import 'features/article/presentation/article_page/ArticlePage.dart';
 import 'features/article/presentation/catalogue/CataloguePage.dart';
@@ -33,7 +34,7 @@ final GoRouter routerConfig = GoRouter(
         path: "/login",
         name: Urls.login.name,
         builder: (BuildContext context, GoRouterState state) =>
-             CataloguePage(),
+             const LoginPage(),
       ),
     ],
     errorBuilder: (context, state) =>  CataloguePage());
