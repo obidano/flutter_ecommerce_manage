@@ -13,8 +13,9 @@ class MButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Sizes.p48,
+      height: Sizes.p32,
       child: ElevatedButton(
+        style:ElevatedButton.styleFrom(backgroundColor: Colors.white),
         onPressed: onClick,
         child: isLoading
             ? const CircularProgressIndicator()
@@ -23,8 +24,8 @@ class MButton extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
-              .copyWith(color: Colors.white),
+              .titleMedium!
+              .copyWith(color: Colors.deepOrange),
         ),
       ),
     );

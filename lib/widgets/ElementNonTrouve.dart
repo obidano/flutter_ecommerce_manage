@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/widgets/MImage.dart';
 
+import '../routers.dart';
 import '../utils/constantes.dart';
 import 'MButton.dart';
 
@@ -22,17 +25,19 @@ class ElementNonTrouve extends StatelessWidget {
           children: [
             Text(
               message,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
+            ),
+            const MImage(
+              url: "assets/404.png",
+              isNetwork: false,
             ),
             gapH32,
             MButton(
                 onClick: () {
-                  Navigator.of(context).popUntil((route) => routeToGo != null
-                      ? route.settings.name == routeToGo
-                      : route.isFirst);
+                  context.goNamed(Urls.home.name);
                 },
-                text: "Retour à la page d'Accueil" //.hardcoded,
+                text: "Quitter la page" //.hardcoded,
                 )
           ],
         ),
