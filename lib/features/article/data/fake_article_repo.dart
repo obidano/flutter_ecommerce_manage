@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_ecommerce_foundations/data/fakeData.dart';
 import "package:collection/collection.dart";
 
@@ -29,3 +30,7 @@ class FakeArticleRepo {
         (articlesData) => articlesData.firstWhereOrNull((e) => e["id"] == id));
   }
 }
+
+final articleRepoProvider = Provider<FakeArticleRepo>((ref) {
+  return FakeArticleRepo.instance ;
+});

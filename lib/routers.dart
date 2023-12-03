@@ -14,7 +14,7 @@ final GoRouter routerConfig = GoRouter(
         path: "/",
         name: Urls.home.name,
         builder: (BuildContext context, GoRouterState state) =>
-            const CataloguePage(),
+             CataloguePage(),
         routes: <RouteBase>[
           GoRoute(
             path: "details/:id",
@@ -33,7 +33,7 @@ final GoRouter routerConfig = GoRouter(
         path: "/login",
         name: Urls.login.name,
         builder: (BuildContext context, GoRouterState state) =>
-            const CataloguePage(),
+             CataloguePage(),
       ),
     ],
-    errorBuilder: (context, state) => const CataloguePage());
+    errorBuilder: (context, state) =>  CataloguePage());

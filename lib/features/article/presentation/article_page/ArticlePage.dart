@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_ecommerce_foundations/features/article/data/fake_article_repo.dart';
 import '../../../../widgets/ElementNonTrouve.dart';
 import 'ArticleInfo.dart';
 
-class ArticlePage extends StatelessWidget {
+class ArticlePage extends ConsumerWidget {
   final String articleID; // l'ID de l'article
 
   const ArticlePage({super.key, required this.articleID});
 
   @override
-  Widget build(BuildContext context) {
-    var article = FakeArticleRepo.instance.getArticleById(articleID);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var articleProvider = ref.watch(articleRepoProvider);
+    var article = articleProvider.getArticleById(articleID);
 
     // on verifie si l'article cherché à travers l'ID, n'est pas null
     // pour decider quoi afficher
