@@ -1,19 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_ecommerce_foundations/data/fakeData.dart';
 import "package:collection/collection.dart";
 
 class FakeArticleRepo {
-  FakeArticleRepo._();
-
-  static FakeArticleRepo instance = FakeArticleRepo._();
-
-  final List<Map<String, dynamic>> _articles = fakeArticlesList;
+   List<Map<String, dynamic>> _articles = [];// fakeArticlesList;
 
   List<Map<String, dynamic>> getArticles() {
+    return [];
     return _articles;
   }
 
-  Future<List<Map<String, dynamic>>> fetchArticles() {
+  updateArticles(){
+    _articles=fakeArticlesList;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchArticles() async {
+    await Future.delayed(const Duration(seconds: 2));
     return Future.value(_articles);
   }
 
@@ -32,5 +36,22 @@ class FakeArticleRepo {
 }
 
 final articleRepoProvider = Provider<FakeArticleRepo>((ref) {
-  return FakeArticleRepo.instance ;
+  return FakeArticleRepo();
+});
+
+final futureArticlesListProvider =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
+      //caching
+    final link=  ref.keepAlive();
+    Timer(const Duration(seconds: 15),(){
+      link.close();
+    });
+  final repo = ref.watch(articleRepoProvider);
+  return repo.fetchArticles();
+});
+
+final streamOneArticleProvider =
+StreamProvider.autoDispose.family<Map<String, dynamic>?, String>((ref, id) {
+  final repo = ref.watch(articleRepoProvider);
+  return repo.watchOneArticle(id);
 });

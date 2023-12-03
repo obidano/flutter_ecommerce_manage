@@ -37,7 +37,7 @@ class ElementNonTrouve extends StatelessWidget {
                 onClick: () {
                   context.goNamed(Urls.home.name);
                 },
-                text: "Quitter la page" //.hardcoded,
+                text: "Quitter la page"
                 )
           ],
         ),

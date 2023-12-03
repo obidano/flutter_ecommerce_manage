@@ -8,35 +8,40 @@ import 'ArticleInfo.dart';
 class ArticlePage extends ConsumerWidget {
   final String articleID; // l'ID de l'article
 
-  const ArticlePage({super.key, required this.articleID});
+  ArticlePage({super.key, required this.articleID});
+
+  Map<String, dynamic>? article = null;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var articleProvider = ref.watch(articleRepoProvider);
-    var article = articleProvider.getArticleById(articleID);
+    var articleProviderValue = ref.watch(streamOneArticleProvider(articleID));
 
-    // on verifie si l'article cherché à travers l'ID, n'est pas null
-    // pour decider quoi afficher
     return Scaffold(
-        appBar: _appBar(context, article),
-        body: article == null
-            ? const ElementNonTrouve(
-                message: "Article non trouvé",
-              )
-            : _contenuArticle(article));
+        appBar: _appBar(context),
+        body: articleProviderValue.when(
+          skipLoadingOnRefresh: false,
+            data: (data) {
+              article = data;
+              return _contenuPrincipal();
+            },
+            error: (err, st) => const ElementNonTrouve(
+                  message: "Article non trouvé",
+                ),
+            loading: () => const Center(child: CircularProgressIndicator())));
   }
 
-  Widget _contenuArticle(Map<String, dynamic> article) {
+  Widget _contenuPrincipal() {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          children: [ArticleInfo(article: article)],
+          children: [ArticleInfo(article: article!)],
         ),
       ),
     );
   }
 
-  AppBar _appBar(BuildContext context, Map<String, dynamic>? article) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       title: Text(article?['nom'] ?? ""),
       leading: IconButton(
