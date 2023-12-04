@@ -41,26 +41,28 @@ class MButton extends StatelessWidget {
           return elevation ?? 1.0;
         }))),
         onPressed: onClick,
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : Row(
-                mainAxisSize: mainAxisSize,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    const Icon(Icons.refresh),
-                    gapW8,
-                  ],
-                  Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: textColor),
-                  ),
-                ],
-              ),
+        child: Row(
+          mainAxisSize: mainAxisSize,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (isLoading) ...[
+              const CircularProgressIndicator(),
+              gapW8,
+            ],
+            if (icon != null && !isLoading) ...[
+              const Icon(Icons.refresh),
+              gapW8,
+            ],
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: textColor),
+            ),
+          ],
+        ),
       ),
     );
   }

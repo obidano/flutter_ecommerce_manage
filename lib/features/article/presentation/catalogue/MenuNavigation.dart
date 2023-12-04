@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/features/authenttication/data/fake_auth_repo.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginController.dart';
 import 'package:new_ecommerce_foundations/routers.dart';
 import 'package:new_ecommerce_foundations/utils/constantes.dart';
+import 'package:new_ecommerce_foundations/utils/errorDialog.dart';
 
 class MenuNavigation extends ConsumerWidget {
   const MenuNavigation({super.key});
@@ -16,6 +18,9 @@ class MenuNavigation extends ConsumerWidget {
       }
     });
     var state = ref.watch(loginControllerProvider);
+    var authProvider=ref.watch(authRepoProvider);
+    var user = ref.watch(streamAuthStatePRovider).value;
+    var connectedUser=authProvider.connectedUser;
 
     return Drawer(
       child: ListView(
@@ -26,12 +31,12 @@ class MenuNavigation extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(.5),
             ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: Sizes.p12),
+            child:  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'E-GESTION',
                     style: TextStyle(
                         color: Colors.black,
@@ -39,8 +44,8 @@ class MenuNavigation extends ConsumerWidget {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'user email',
-                    style: TextStyle(
+                    "${user?['email']} -- ${connectedUser?['email']}",
+                    style: const TextStyle(
                         color: Colors.grey,
                         fontSize: Sizes.p16,
                         fontWeight: FontWeight.bold),
@@ -105,23 +110,5 @@ class MenuNavigation extends ConsumerWidget {
     ]);
   }
 
-  void showErrorDialog(BuildContext context, String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Message"),
-          content: Text(errorMessage),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Fermer'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 }
