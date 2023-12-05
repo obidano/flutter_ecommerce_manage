@@ -55,9 +55,13 @@ GoRouter router(RouterRef ref){
         GoRoute(
           path: "/login",
           name: Urls.login.name,
-          builder: (BuildContext context, GoRouterState state) =>
-          const LoginPage(),
+          builder: (BuildContext context, GoRouterState state) => const LoginPage(),
         ),
+        GoRoute(
+          path:"/register",
+          name:"register_user",
+        builder: (_,__)=> const LoginPage(),
+        )
       ],
       errorBuilder: (context, state) => CataloguePage());
 }
