@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:new_ecommerce_foundations/features/authenttication/data/fake_auth_repo.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginController.dart';
 import 'package:new_ecommerce_foundations/routers.dart';
 import 'package:new_ecommerce_foundations/utils/constantes.dart';
 import 'package:new_ecommerce_foundations/utils/errorDialog.dart';
+
+import '../../../authenttication/data/abstract_auth_repo.dart';
 
 class MenuNavigation extends ConsumerWidget {
   const MenuNavigation({super.key});
@@ -18,9 +19,7 @@ class MenuNavigation extends ConsumerWidget {
       }
     });
     var state = ref.watch(loginControllerProvider);
-    var authProvider=ref.watch(authRepoProvider);
-    var user = ref.watch(streamAuthStatePRovider).value;
-    var connectedUser=authProvider.connectedUser;
+    var asyncConnectedUser = ref.watch(connectedProvider);
 
     return Drawer(
       child: ListView(
@@ -31,7 +30,7 @@ class MenuNavigation extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(.5),
             ),
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,43 +42,18 @@ class MenuNavigation extends ConsumerWidget {
                         fontSize: Sizes.p24,
                         fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "${user?['email']} -- ${connectedUser?['email']}",
-                    style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: Sizes.p16,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  _userEmail(asyncConnectedUser),
                 ],
               ),
             ),
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.category_rounded,
-            ),
-            title: const Text('Categories'),
-            onTap: () {
-              context.goNamed(Urls.login.name);
-            },
-          ),
-          Divider(thickness: 2, color: Colors.grey.withOpacity(.1)),
-          ListTile(
-            leading: const Icon(
-              Icons.people,
-            ),
-            title: const Text('Clients'),
-            onTap: () {},
-          ),
-          Divider(thickness: 2, color: Colors.grey.withOpacity(.1)),
-          ListTile(
-            leading: const Icon(
-              Icons.shopping_cart,
-            ),
-            title: const Text('Commandes'),
-            onTap: () {},
-          ),
-          Divider(thickness: 3, color: Colors.grey.withOpacity(.1)),
+          _menuItem(context,
+              title: 'Categories',
+              icon: Icons.category_rounded,
+              route: Urls.login.name),
+          _menuItem(context, title: 'Clients', icon: Icons.people, route: null),
+          _menuItem(context,
+              title: 'Commandes', icon: Icons.shopping_cart, route: null),
           state.isLoading
               ? const SizedBox(
                   height: 50,
@@ -88,6 +62,26 @@ class MenuNavigation extends ConsumerWidget {
               : _buttonDeconnexion(context, ref)
         ],
       ),
+    );
+  }
+
+  Widget _menuItem(BuildContext context,
+      {required String title, required IconData icon, String? route}) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(
+            icon,
+          ),
+          title: Text(title),
+          onTap: () {
+            if (route != null) {
+              context.goNamed(route);
+            }
+          },
+        ),
+        Divider(thickness: 2, color: Colors.grey.withOpacity(.1)),
+      ],
     );
   }
 
@@ -110,5 +104,19 @@ class MenuNavigation extends ConsumerWidget {
     ]);
   }
 
-
+  _userEmail(AsyncValue<Map<String, dynamic>?> asyncConnectedUser) {
+    return asyncConnectedUser.when(data: (Map<String, dynamic>? data) {
+      return Text(
+        "${data?['email']}",
+        style: const TextStyle(
+            color: Colors.grey,
+            fontSize: Sizes.p16,
+            fontWeight: FontWeight.bold),
+      );
+    }, error: (err, st) {
+      return const Text("Erreur");
+    }, loading: () {
+      return const CircularProgressIndicator();
+    });
+  }
 }

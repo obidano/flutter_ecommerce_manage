@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:new_ecommerce_foundations/data/fakeData.dart';
 import "package:collection/collection.dart";
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part "fake_article_repo.g.dart";
 
 class FakeArticleRepo {
    List<Map<String, dynamic>> _articles = [];// fakeArticlesList;
@@ -35,20 +37,16 @@ class FakeArticleRepo {
   }
 }
 
-final articleRepoProvider = Provider<FakeArticleRepo>((ref) {
+@Riverpod(keepAlive: false)
+FakeArticleRepo articleRepo (ArticleRepoRef ref) {
   return FakeArticleRepo();
-});
+}
 
-final futureArticlesListProvider =
-    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
-      //caching
-    final link=  ref.keepAlive();
-    Timer(const Duration(seconds: 15),(){
-      link.close();
-    });
+@Riverpod(keepAlive: false)
+Future<List<Map<String, dynamic>>> futureArticlesList(FutureArticlesListRef ref){
   final repo = ref.watch(articleRepoProvider);
   return repo.fetchArticles();
-});
+}
 
 final streamOneArticleProvider =
 StreamProvider.autoDispose.family<Map<String, dynamic>?, String>((ref, id) {

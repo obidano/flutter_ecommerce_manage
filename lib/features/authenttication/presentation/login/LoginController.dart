@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:new_ecommerce_foundations/features/authenttication/data/fake_auth_repo.dart';
+
+import '../../data/abstract_auth_repo.dart';
 
 class LoginController extends StateNotifier<AsyncValue<void>> {
-  final FakeAuthRepo authRepo;
+  final AuthRepo authRepo;
 
   LoginController({required this.authRepo})
       : super(const AsyncValue<void>.data(null));

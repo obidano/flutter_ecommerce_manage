@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:new_ecommerce_foundations/features/authenttication/data/fake_auth_repo.dart';
+import 'features/authenttication/data/abstract_auth_repo.dart';
 import 'routers.dart';
 
-void main() {
+void main() async {
   // point de depart de l'application
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: MyApp()));
+  final authRepo = await FakeAuthRepo.createAuthRepo();
+  runApp(ProviderScope(
+      overrides: [authRepoProvider.overrideWithValue(authRepo)],
+      child: const MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
