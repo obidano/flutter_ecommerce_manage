@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/features/article/presentation/creer_category/CreerCategoryPage.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/data/user_repo.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginPage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +12,8 @@ import 'features/authenttication/data/abstract_auth_repo.dart';
 import 'features/authenttication/presentation/register/RegisterPage.dart';
 part "routers.g.dart";
 
-enum Urls { home, detailArticle, login, register }
+enum Urls { home, detailArticle, login,
+  register ,  creerCategorie }
 
 @Riverpod(keepAlive: true)
 GoRouter router(RouterRef ref){
@@ -19,7 +21,7 @@ GoRouter router(RouterRef ref){
   final userProvider=ref.watch(userRepoProvider);
   return GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: "/register",
+      initialLocation: "/home/creer-category",
       redirect: (context, state) async{
         bool check= await userProvider.controleUtilisateurExistant();
         var routeEnCours= state.matchedLocation;
@@ -60,6 +62,11 @@ GoRouter router(RouterRef ref){
                     child: ArticlePage(articleID: articleId ?? ""));
               },
             ),
+            GoRoute(
+              path:"creer-category",
+              name: Urls.creerCategorie.name,
+              builder:(_, __)=>CreerCategoryPage()
+            )
           ],
         ),
         GoRoute(
