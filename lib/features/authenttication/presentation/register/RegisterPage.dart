@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/features/authenttication/data/user_repo.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginController.dart';
 import 'package:new_ecommerce_foundations/routers.dart';
 import 'package:new_ecommerce_foundations/utils/constantes.dart';
@@ -10,29 +11,26 @@ import 'package:new_ecommerce_foundations/utils/errorDialog.dart';
 import 'package:new_ecommerce_foundations/widgets/MButton.dart';
 import 'package:new_ecommerce_foundations/widgets/MImage.dart';
 import 'package:new_ecommerce_foundations/widgets/MTextField.dart';
+import 'package:uuid/uuid.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  ConsumerState createState() => _LoginPageState();
+  ConsumerState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   var emailCtrl = TextEditingController(text: "omotetedan3@gmail.com");
   var passwordCtrl = TextEditingController(text: "dandan");
+  var confirmPasswordCtrl = TextEditingController(text: "dandan");
+  var phoneCtrl = TextEditingController(text: "2438989");
+  var nameCtrl = TextEditingController(text: "ODC");
+
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    ref.listen<AsyncValue<void>>(loginControllerProvider, (previous, next) {
-      if (next.hasError) {
-        showErrorDialog(context, next.error.toString());
-      }
-    });
-
-    var state = ref.watch(loginControllerProvider);
     // debugPrint("state loading ${state.isLoading}");
 
     return Scaffold(
@@ -49,27 +47,54 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: 170,
                 ),
                 Text(
-                  "Authentification",
+                  "Creation de compte",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 gapH16,
                 MTextField(
+                    label: "Nom d'utilisateur",
+                    hintText: "Saisir par ex: naruto...",
+                    controller: nameCtrl),
+                MTextField(
                     label: "Email",
                     hintText: "Saisir votre adresse mail...",
-                    controller: emailCtrl),
+                    controller: emailCtrl,
+                  keyboardType: TextInputType.emailAddress,),
+                MTextField(
+                    label: "Numero de telephone",
+                    hintText: "saisir 08XXXXXX...",
+                    controller: phoneCtrl,
+                  keyboardType: TextInputType.phone,
+                ),
                 MTextField(
                     label: "Mot de passe",
                     obscureText: true,
                     hintText: "Saisir votre mot de passe...",
                     controller: passwordCtrl),
+                MTextField(
+                    label: "Confirmer Mot de passe",
+                    obscureText: true,
+                    hintText: "Confirmer votre mot de passe...",
+                    controller: confirmPasswordCtrl),
                 gapH24,
                 MButton(
                   backgroundColor: Colors.orange,
                   textColor: Colors.white,
-                  text: "Se connecter",
-                  isLoading: state.isLoading,
+                  text: "Créer Compte",
+                 // isLoading: state.isLoading,
                   onClick: () {
-                    _onConnect(state);
+                    //_onConnect(state);
+                    Map<String, dynamic> userToCreate={
+                      "id": Uuid().v1(),
+                      "nom": nameCtrl.text,
+                      "email": emailCtrl.text,
+                      "phone": phoneCtrl.text,
+                      "password": passwordCtrl.text
+                    };
+                    var provider= ref.read(userRepoProvider);
+                    provider.creerUser(userToCreate);
+                    context.replaceNamed(Urls.home.name);
+
                   },
                   mainAxisSize: MainAxisSize.max,
                 ),

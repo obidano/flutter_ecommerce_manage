@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_ecommerce_foundations/features/authenttication/data/user_repo.dart';
 import 'package:new_ecommerce_foundations/features/authenttication/presentation/login/LoginPage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'features/article/presentation/article_page/ArticlePage.dart';
 import 'features/article/presentation/catalogue/CataloguePage.dart';
 import 'features/authenttication/data/abstract_auth_repo.dart';
+import 'features/authenttication/presentation/register/RegisterPage.dart';
 part "routers.g.dart";
 
-enum Urls { home, detailArticle, login }
+enum Urls { home, detailArticle, login, register }
 
 @Riverpod(keepAlive: true)
 GoRouter router(RouterRef ref){
   final authRpovider = ref.watch(authRepoProvider);
+  final userProvider=ref.watch(userRepoProvider);
   return GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: "/home",
+      initialLocation: "/register",
       redirect: (context, state) async{
+        bool check= await userProvider.controleUtilisateurExistant();
+        if(check){
+          return "/home";
+        }
+
+        return null;
         bool connected = await authRpovider.getLocalConnectedUser() != null;
         // bool connected = authRpovider.connectedUser != null;
         debugPrint("connected $connected / state.matchedLocation ${state.matchedLocation}");
@@ -58,9 +67,9 @@ GoRouter router(RouterRef ref){
           builder: (BuildContext context, GoRouterState state) => const LoginPage(),
         ),
         GoRoute(
-          path:"/register",
-          name:"register_user",
-        builder: (_,__)=> const LoginPage(),
+          path: "/register",
+          name: Urls.register.name,
+          builder:(_, __) => RegisterPage(),
         )
       ],
       errorBuilder: (context, state) => CataloguePage());

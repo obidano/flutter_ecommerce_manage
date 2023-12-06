@@ -14,6 +14,7 @@ class User {
   String? email;
   String? genre;
   String? phone;
+  String? password;
 
   User({
     this.id,
@@ -21,6 +22,7 @@ class User {
     this.email,
     this.genre,
     this.phone,
+    this.password,
   });
 
   factory User.fromMap(Map<String, dynamic> json) => User(
@@ -29,6 +31,7 @@ class User {
     email: json["email"],
     genre: json["genre"],
     phone: json["phone"],
+    password: json["password"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -37,5 +40,6 @@ class User {
     "email": email,
     "genre": genre,
     "phone": phone,
+    "password": password,
   };
 }
