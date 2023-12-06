@@ -13,6 +13,8 @@ import 'package:new_ecommerce_foundations/widgets/MImage.dart';
 import 'package:new_ecommerce_foundations/widgets/MTextField.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../data/categorie_repo.dart';
+
 class CreerCategoryPage extends ConsumerStatefulWidget {
   const CreerCategoryPage({super.key});
 
@@ -56,15 +58,16 @@ class _CreerCategoryState extends ConsumerState<CreerCategoryPage> {
                   textColor: Colors.white,
                   text: "Créer",
                  // isLoading: state.isLoading,
-                  onClick: () {
-                    //_onConnect(state);
-                    Map<String, dynamic> userToCreate={
+                  onClick: () async {
+                    Map<String, dynamic> data={
                       "id": Uuid().v1(),
                       "nom": nameCtrl.text,
                     };
-                    var provider= ref.read(userRepoProvider); // mettre categorie prodvider
-                    provider.creerUser(userToCreate);
-                    context.replaceNamed(Urls.home.name);
+                    var provider= ref.read(categoriRepoProvider); // mettre categorie prodvider
+                    await provider.creerCategory(data);
+                    print("Enregistrement reussi");
+                     context.pop();
+                    //context.pushNamed(Urls.listeCategories.name);
 
                   },
                   mainAxisSize: MainAxisSize.max,

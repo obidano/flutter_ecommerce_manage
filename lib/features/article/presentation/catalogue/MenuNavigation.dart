@@ -50,7 +50,7 @@ class MenuNavigation extends ConsumerWidget {
           _menuItem(context,
               title: 'Categories',
               icon: Icons.category_rounded,
-              route: Urls.login.name),
+              route: Urls.listeCategories.name),
           _menuItem(context, title: 'Clients', icon: Icons.people, route: null),
           _menuItem(context,
               title: 'Commandes', icon: Icons.shopping_cart, route: null),
