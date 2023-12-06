@@ -22,7 +22,8 @@ GoRouter router(RouterRef ref){
       initialLocation: "/register",
       redirect: (context, state) async{
         bool check= await userProvider.controleUtilisateurExistant();
-        if(check){
+        var routeEnCours= state.matchedLocation;
+        if(check && (routeEnCours=='/register' || routeEnCours== "/login")){
           return "/home";
         }
 

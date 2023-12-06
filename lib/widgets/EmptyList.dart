@@ -64,6 +64,7 @@ class _EmptyListState extends ConsumerState<EmptyList> {
             MImage(
               url: selectedImages,
               isNetwork: false,
+              height: 150,
             ),
             gapH32,
             MButton(
